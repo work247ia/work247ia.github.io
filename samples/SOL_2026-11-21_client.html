@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SOL · data report 2026-11-21</title><style>
+:root{--sfondo:#f6f5f1;--carta:#fff;--testo:#1d1d1b;--tenue:#6b6a65;--bordo:#e2e0d8;--accento:#2f5bd3;
+--pos:#1f8a4c;--neg:#c2402f;--neu:#8a7a2f;--pos-bg:#e5f4ea;--neg-bg:#fbe7e3;--neu-bg:#f5f0dc;--m50:#e08a1e;--m200:#8b5cf6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--sfondo:#151514;--carta:#1f1f1d;--testo:#ecebe6;
+--tenue:#a3a29b;--bordo:#34332f;--accento:#7d9cf0;--pos:#5cc78a;--neg:#f08a78;--neu:#d6c26b;--pos-bg:#1d3326;
+--neg-bg:#3a221d;--neu-bg:#333019}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--sfondo);color:var(--testo);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1080px;margin:0 auto;padding:28px 16px 60px}
+header.pagina{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:baseline;justify-content:space-between;
+border-bottom:1px solid var(--bordo);padding-bottom:14px;margin-bottom:22px}
+header.pagina h1{margin:0;font-size:1.9rem;line-height:1.2}
+header.pagina .meta{color:var(--tenue);font-size:.92rem}
+h2{font-size:1.3rem;margin:34px 0 12px}
+h3{font-size:1.02rem;margin:0 0 6px}
+section{margin:0 0 8px}
+.testata{display:grid;grid-template-columns:150px minmax(0,1fr);gap:24px;align-items:center;background:var(--carta);
+border:1px solid var(--bordo);border-radius:14px;padding:20px;margin-bottom:18px}
+.punteggio{width:140px;height:140px;border-radius:50%;display:grid;place-content:center;text-align:center;
+background:conic-gradient(var(--accento) calc(var(--v)*1%),var(--bordo) 0);position:relative}
+.punteggio::before{content:"";position:absolute;inset:14px;border-radius:50%;background:var(--carta)}
+.punteggio b,.punteggio span{position:relative}
+.punteggio b{font-size:2.6rem;line-height:1}.punteggio span{color:var(--tenue);font-size:.85rem}
+.verdetto{font-size:1.08rem;margin:0 0 8px}
+.nota{color:var(--tenue);font-size:.92rem}
+.griglia2,.griglia3,.griglia4{display:grid;gap:14px;margin:14px 0}
+.griglia2{grid-template-columns:repeat(2,minmax(0,1fr))}.griglia3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.griglia4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{background:var(--carta);border:1px solid var(--bordo);border-radius:12px;padding:16px}
+.card p{margin:6px 0}.card ul{margin:6px 0;padding-left:20px}
+.grande{font-size:1.35rem;font-weight:650}
+.etichetta{display:block;color:var(--tenue);font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.rialzo{border-top:4px solid var(--pos)}.ribasso{border-top:4px solid var(--neg)}
+.invalida{font-size:.92rem;color:var(--tenue);border-top:1px dashed var(--bordo);padding-top:8px}
+table{width:100%;border-collapse:collapse;background:var(--carta);border:1px solid var(--bordo);border-radius:10px;
+overflow:hidden;font-size:.94rem;margin:10px 0}
+th,td{padding:8px 10px;border-bottom:1px solid var(--bordo);text-align:left;vertical-align:top}
+th{color:var(--tenue);font-weight:600;font-size:.85rem}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tabella{overflow-x:auto}
+.barra{height:8px;min-width:90px;border-radius:4px;margin-top:8px;
+background:linear-gradient(90deg,var(--accento) calc(var(--v)*10%),var(--bordo) 0)}
+.rif{display:inline-block;font-size:.75rem;color:var(--tenue);border:1px solid var(--bordo);border-radius:6px;
+padding:0 5px;margin-left:2px;vertical-align:1px}
+.interpretazione{font-style:italic;color:var(--tenue)}
+.notizie{list-style:none;padding:0;margin:10px 0}
+.notizie li{background:var(--carta);border:1px solid var(--bordo);border-radius:10px;padding:10px 12px;margin:8px 0}
+.tag{display:inline-block;font-size:.75rem;font-weight:600;border-radius:999px;padding:1px 9px;margin-right:4px}
+.tag.pos{background:var(--pos-bg);color:var(--pos)}.tag.neg{background:var(--neg-bg);color:var(--neg)}
+.tag.neu{background:var(--neu-bg);color:var(--neu)}
+.esterna{font-size:.92rem;border-left:3px solid var(--accento);padding-left:10px}
+a{color:var(--accento)}
+.grafico{margin:6px 0 18px;background:var(--carta);border:1px solid var(--bordo);border-radius:12px;padding:12px 12px 4px}
+.grafico figcaption{color:var(--tenue);font-size:.88rem;margin-bottom:4px}
+.grafico svg{width:100%;height:auto;display:block}
+.g-griglia{stroke:var(--bordo);stroke-width:1}.g-asse{fill:var(--tenue);font-size:12px}
+polyline{fill:none;stroke-linejoin:round;stroke-linecap:round}
+.g-prezzo{stroke:var(--testo);stroke-width:2}.g-m50{stroke:var(--m50);stroke-width:1.5}
+.g-m200{stroke:var(--m200);stroke-width:1.5;stroke-dasharray:5 4}.g-punto{fill:var(--accento)}
+.leg::before{content:"";display:inline-block;width:14px;height:3px;margin:0 4px 3px 6px;vertical-align:middle}
+.leg.prezzo::before{background:var(--testo)}.leg.m50::before{background:var(--m50)}.leg.m200::before{background:var(--m200)}
+.titolone{font-size:1.6rem;line-height:1.2;margin:0 0 10px}
+.kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--bordo);border:1px solid var(--bordo);
+border-radius:12px;overflow:hidden;margin:0 0 18px}
+.kpi div{background:var(--carta);padding:12px 14px}.kpi b{display:block;font-size:1.45rem;line-height:1.15}
+.kpi span{font-size:.85rem;color:var(--tenue)}
+.verdetto-box{border:2px solid var(--testo);border-radius:12px;padding:18px 20px;background:var(--carta);margin:14px 0}
+.verdetto-box .risposta{font-size:1.6rem;font-weight:750;line-height:1.15;margin:4px 0 8px}
+.pos{color:var(--pos)}.neg{color:var(--neg)}.neu{color:var(--neu)}
+.tag.mix{background:var(--neu-bg);color:var(--neu)}
+.nota-box{border-left:4px solid var(--neu);background:var(--carta);padding:10px 14px;border-radius:0 8px 8px 0}
+.k{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin-top:10px!important}
+tr.questo td{font-weight:700;background:var(--sfondo)}tr.escluso td{color:var(--tenue);text-decoration:line-through}
+td.evidenza{font-weight:750;background:var(--sfondo);outline:2px solid var(--accento);outline-offset:-2px}
+.g{background:var(--carta);border:1px solid var(--bordo);border-radius:12px;padding:14px 14px 10px;margin:12px 0}
+.g h3{margin-bottom:2px}.g-sotto{color:var(--tenue);font-size:.88rem;margin:2px 0 6px}
+.g-nota{color:var(--tenue);font-size:.84rem;margin:6px 0 0}
+.g-dati{display:none}.g-area{width:100%}.g-area svg{display:block;max-width:100%;height:auto}
+.g-base{stroke:var(--tenue);stroke-width:1}.g-rif{stroke:var(--tenue);stroke-width:1.5;stroke-dasharray:5 4}
+.g-val{fill:var(--testo);font-size:11px;font-weight:650}
+.g-legenda{display:flex;flex-wrap:wrap;gap:12px;font-size:.84rem;color:var(--tenue);margin:4px 0}
+.g-legenda i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.g-oriz{display:grid;gap:8px;margin-top:8px}
+.g-riga{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr) auto;gap:10px;align-items:center;font-size:.9rem}
+.g-riga b{white-space:nowrap;text-align:right;min-width:60px}.g-evid span:first-child,.g-evid b{font-weight:800}
+.g-traccia{position:relative;height:14px;background:var(--sfondo);border-radius:4px;overflow:hidden}
+.g-traccia i{position:absolute;top:0;bottom:0;border-radius:4px}
+.g-matrice{display:grid;gap:8px;margin-top:10px}
+.g-mh{font-weight:700;font-size:.88rem;text-align:center;align-self:end}.g-mv{font-weight:700;font-size:.88rem;align-self:center}
+.g-cella{border-radius:10px;padding:12px;color:#141414}.g-cella b{display:block}.g-cella p{font-size:.88rem;margin:4px 0 0}
+.g-si{background:#a7e3c1}.g-attesa{background:#f4d58a}.g-no{background:#f3a9ab}
+.g-calc{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:20px;align-items:center;margin-top:8px}
+.g-calc label{display:block;font-size:.88rem;font-weight:600;margin:8px 0}
+.g-calc input{display:block;width:100%;margin-top:4px;font:inherit;padding:8px 10px;border:1px solid var(--bordo);
+border-radius:8px;background:var(--sfondo);color:var(--testo)}
+.g-cali{display:flex;flex-wrap:wrap;gap:8px}
+.g-cali button{font:inherit;font-size:.86rem;padding:7px 12px;border-radius:8px;border:1px solid var(--bordo);
+background:var(--carta);color:var(--testo);cursor:pointer}
+.g-cali button.on{background:var(--testo);color:var(--carta)}
+.g-out{background:var(--accento);color:var(--sfondo);border-radius:12px;padding:18px}.g-out p{margin:2px 0}
+.g-res{font-size:2rem;font-weight:800}
+@media (max-width:820px){.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.g-calc{grid-template-columns:minmax(0,1fr)}
+.g-riga{grid-template-columns:minmax(0,1fr) auto}.g-riga .g-traccia{grid-column:1/-1;order:3}
+.g-matrice{grid-template-columns:minmax(0,1fr)!important}.g-matrice>span:first-child{display:none}}
+footer{margin-top:40px;color:var(--tenue);font-size:.85rem;border-top:1px solid var(--bordo);padding-top:14px}
+@media (max-width:820px){.griglia3,.griglia4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.griglia2,.griglia3,.griglia4{grid-template-columns:minmax(0,1fr)}
+.testata{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}}
+</style></head>
+<body><main>
+<header class="pagina"><h1>Solana (SOL) (SOL)</h1>
+<span class="meta">Data collected on 2026-11-21 18:15 · prepared by Moonlighter, an AI</span></header>
+<section class="testata">
+  <div class="punteggio" style="--v:50"><b>50</b><span>/100</span></div>
+  <div>
+    <h2 class="titolone">The network keeps earning and upgrading, but the token is down 45% in a year amid a crypto-wide panic</h2>
+    <p class="verdetto">Solana is still one of the largest and most-used smart-contract blockchains. It brought in about $1.34bn of protocol revenue over the past year, it is very liquid, and it is winning institutional integrations (DTCC, tokenised funds). Against that, fees, revenue and deposits (TVL) are all falling fast, the token has no supply cap and new issuance is now worth more than the revenue the network keeps, and the price is in a clear downtrend. SOL moves about 1.2 times as much as Bitcoin, at a time when market sentiment is at "extreme fear". The overall score is mid-range: the underlying network is strong, but market and momentum risks are high.</p>
+    <p class="nota">Confidence: medium · would improve with on-chain activity data (users, transactions, staking ratio), liquidation data and a clean peer data set</p>
+  </div>
+</section>
+<figure class="grafico"><figcaption>Closing price, last 12 months (USD) · <span class="leg prezzo">price</span> <span class="leg m50">50-day avg</span> <span class="leg m200">200-day avg</span></figcaption><svg viewBox="0 0 900 280" role="img" aria-label="Price chart, last 12 months"><line class="g-griglia" x1="58" x2="888" y1="250.0" y2="250.0"/><text class="g-asse" x="52" y="254.0" text-anchor="end">57.12</text><line class="g-griglia" x1="58" x2="888" y1="191.0" y2="191.0"/><text class="g-asse" x="52" y="195.0" text-anchor="end">80.73</text><line class="g-griglia" x1="58" x2="888" y1="132.0" y2="132.0"/><text class="g-asse" x="52" y="136.0" text-anchor="end">104.34</text><line class="g-griglia" x1="58" x2="888" y1="73.0" y2="73.0"/><text class="g-asse" x="52" y="77.0" text-anchor="end">127.96</text><line class="g-griglia" x1="58" x2="888" y1="14.0" y2="14.0"/><text class="g-asse" x="52" y="18.0" text-anchor="end">151.57</text><text class="g-asse" x="80.7" y="272" text-anchor="middle">12/25</text><text class="g-asse" x="221.7" y="272" text-anchor="middle">02/26</text><text class="g-asse" x="355.9" y="272" text-anchor="middle">04/26</text><text class="g-asse" x="494.6" y="272" text-anchor="middle">06/26</text><text class="g-asse" x="633.3" y="272" text-anchor="middle">08/26</text><text class="g-asse" x="772.0" y="272" text-anchor="middle">10/26</text><polyline class="g-m200" points="510.5,138.5 512.8,139.3 515.1,140.1 517.3,140.9 519.6,141.8 521.9,142.7 524.2,143.6 526.4,144.4 528.7,145.2 531.0,146.0 533.3,146.8 535.5,147.6 537.8,148.4 540.1,149.3 542.4,150.1 544.6,150.9 546.9,151.7 549.2,152.5 551.5,153.3 553.7,154.1 556.0,154.9 558.3,155.7 560.5,156.4 562.8,157.1 565.1,157.8 567.4,158.3 569.6,158.9 571.9,159.4 574.2,159.9 576.5,160.5 578.7,161.1 581.0,161.7 583.3,162.3 585.6,162.9 587.8,163.4 590.1,164.0 592.4,164.5 594.7,165.1 596.9,165.8 599.2,166.4 601.5,167.0 603.8,167.6 606.0,168.2 608.3,168.9 610.6,169.6 612.8,170.3 615.1,171.1 617.4,171.9 619.7,172.7 621.9,173.5 624.2,174.3 626.5,175.0 628.8,175.8 631.0,176.7 633.3,177.6 635.6,178.5 637.9,179.4 640.1,180.3 642.4,181.1 644.7,181.9 647.0,182.7 649.2,183.3 651.5,184.0 653.8,184.6 656.1,185.2 658.3,185.9 660.6,186.4 662.9,187.0 665.2,187.7 667.4,188.3 669.7,188.8 672.0,189.3 674.2,189.6 676.5,189.8 678.8,189.9 681.1,189.9 683.3,189.9 685.6,189.6 687.9,189.5 690.2,189.3 692.4,189.1 694.7,188.9 697.0,188.6 699.3,188.3 701.5,188.0 703.8,187.8 706.1,187.6 708.4,187.4 710.6,187.2 712.9,187.0 715.2,186.7 717.5,186.4 719.7,186.2 722.0,186.0 724.3,185.8 726.5,185.5 728.8,185.2 731.1,185.0 733.4,184.8 735.6,184.6 737.9,184.5 740.2,184.2 742.5,183.9 744.7,183.6 747.0,183.4 749.3,183.0 751.6,182.6 753.8,182.2 756.1,181.7 758.4,181.3 760.7,180.8 762.9,180.4 765.2,180.0 767.5,179.6 769.8,179.2 772.0,178.9 774.3,178.6 776.6,178.3 778.8,177.9 781.1,177.5 783.4,177.2 785.7,176.8 787.9,176.5 790.2,176.3 792.5,176.0 794.8,175.8 797.0,175.6 799.3,175.3 801.6,175.0 803.9,174.7 806.1,174.4 808.4,174.2 810.7,173.9 813.0,173.6 815.2,173.2 817.5,172.9 819.8,172.6 822.1,172.4 824.3,172.2 826.6,171.9 828.9,171.7 831.2,171.5 833.4,171.3 835.7,171.1 838.0,171.0 840.2,170.8 842.5,170.7 844.8,170.7 847.1,170.6 849.3,170.5 851.6,170.5 853.9,170.4 856.2,170.3 858.4,170.4 860.7,170.3 863.0,170.4 865.3,170.4 867.5,170.5 869.8,170.6 872.1,170.7 874.4,170.9 876.6,171.0 878.9,171.1 881.2,171.3 883.5,171.4 885.7,171.6 888.0,171.8"/><polyline class="g-m50" points="169.4,64.3 171.7,64.0 174.0,63.4 176.2,63.0 178.5,62.6 180.8,62.2 183.1,62.2 185.3,62.0 187.6,61.7 189.9,61.8 192.2,61.8 194.4,61.8 196.7,62.2 199.0,63.1 201.3,63.6 203.5,63.9 205.8,64.6 208.1,65.0 210.4,65.3 212.6,65.9 214.9,66.9 217.2,67.8 219.5,69.1 221.7,70.8 224.0,72.0 226.3,73.5 228.5,75.4 230.8,77.6 233.1,79.2 235.4,81.2 237.6,83.1 239.9,85.0 242.2,87.2 244.5,89.4 246.7,91.6 249.0,93.4 251.3,95.1 253.6,97.0 255.8,98.9 258.1,100.8 260.4,103.0 262.7,105.1 264.9,107.2 267.2,109.5 269.5,112.2 271.8,115.0 274.0,118.0 276.3,120.6 278.6,123.1 280.8,125.9 283.1,128.5 285.4,131.1 287.7,133.7 289.9,136.3 292.2,139.1 294.5,141.9 296.8,144.8 299.0,147.9 301.3,151.0 303.6,153.5 305.9,155.9 308.1,157.8 310.4,160.0 312.7,162.0 315.0,164.0 317.2,165.7 319.5,166.8 321.8,168.3 324.1,170.1 326.3,171.9 328.6,173.3 330.9,174.9 333.2,175.8 335.4,176.3 337.7,177.0 340.0,177.2 342.2,177.5 344.5,177.3 346.8,177.5 349.1,177.8 351.3,178.1 353.6,178.3 355.9,178.4 358.2,178.4 360.4,178.3 362.7,178.5 365.0,178.7 367.3,179.1 369.5,179.1 371.8,179.2 374.1,179.2 376.4,179.1 378.6,179.0 380.9,179.2 383.2,178.9 385.5,178.6 387.7,178.3 390.0,178.2 392.3,178.1 394.5,177.9 396.8,177.9 399.1,177.9 401.4,177.9 403.6,177.9 405.9,178.2 408.2,178.3 410.5,178.2 412.7,178.1 415.0,177.9 417.3,178.0 419.6,178.1 421.8,178.3 424.1,178.4 426.4,178.6 428.7,178.8 430.9,179.3 433.2,179.8 435.5,180.1 437.8,180.1 440.0,180.0 442.3,179.8 444.6,179.4 446.8,178.8 449.1,178.7 451.4,178.7 453.7,178.7 455.9,178.5 458.2,178.4 460.5,178.2 462.8,178.0 465.0,177.9 467.3,177.8 469.6,177.5 471.9,177.2 474.1,176.9 476.4,176.7 478.7,176.6 481.0,176.4 483.2,176.6 485.5,176.6 487.8,176.7 490.1,176.8 492.3,176.9 494.6,176.9 496.9,177.6 499.2,178.2 501.4,179.0 503.7,180.3 506.0,181.6 508.2,182.6 510.5,183.4 512.8,184.4 515.1,185.6 517.3,186.6 519.6,187.5 521.9,188.4 524.2,189.2 526.4,189.8 528.7,190.4 531.0,191.0 533.3,191.6 535.5,192.3 537.8,192.8 540.1,193.4 542.4,194.0 544.6,194.8 546.9,195.7 549.2,196.8 551.5,197.6 553.7,198.7 556.0,199.8 558.3,200.8 560.5,202.0 562.8,202.9 565.1,203.4 567.4,203.9 569.6,204.2 571.9,204.5 574.2,204.7 576.5,204.9 578.7,205.2 581.0,205.6 583.3,206.1 585.6,206.5 587.8,206.9 590.1,207.4 592.4,207.8 594.7,208.1 596.9,208.4 599.2,208.8 601.5,209.1 603.8,209.4 606.0,209.7 608.3,209.8 610.6,209.6 612.8,209.4 615.1,209.2 617.4,208.6 619.7,207.9 621.9,207.5 624.2,207.2 626.5,206.7 628.8,206.2 631.0,205.9 633.3,205.6 635.6,205.4 637.9,205.3 640.1,205.3 642.4,205.2 644.7,205.2 647.0,205.0 649.2,204.7 651.5,204.5 653.8,204.4 656.1,204.2 658.3,203.9 660.6,203.4 662.9,203.1 665.2,202.9 667.4,202.7 669.7,202.4 672.0,202.3 674.2,201.8 676.5,201.2 678.8,200.6 681.1,200.0 683.3,199.3 685.6,198.5 687.9,197.7 690.2,196.7 692.4,195.1 694.7,193.8 697.0,192.4 699.3,191.2 701.5,189.8 703.8,188.6 706.1,187.5 708.4,186.1 710.6,184.8 712.9,183.4 715.2,181.8 717.5,180.5 719.7,179.2 722.0,178.0 724.3,177.0 726.5,175.7 728.8,174.3 731.1,173.0 733.4,171.7 735.6,170.6 737.9,169.4 740.2,168.0 742.5,166.1 744.7,164.1 747.0,162.2 749.3,159.9 751.6,157.7 753.8,155.6 756.1,153.5 758.4,151.0 760.7,148.6 762.9,146.3 765.2,144.2 767.5,142.0 769.8,139.9 772.0,137.8 774.3,135.7 776.6,133.4 778.8,131.1 781.1,128.8 783.4,126.6 785.7,124.6 787.9,123.4 790.2,122.4 792.5,121.5 794.8,120.7 797.0,120.2 799.3,119.8 801.6,119.4 803.9,119.2 806.1,119.5 808.4,119.5 810.7,119.6 813.0,119.4 815.2,119.3 817.5,118.9 819.8,118.7 822.1,118.8 824.3,118.8 826.6,118.9 828.9,119.2 831.2,119.3 833.4,119.4 835.7,119.7 838.0,119.8 840.2,120.1 842.5,120.5 844.8,120.9 847.1,121.3 849.3,121.4 851.6,121.9 853.9,122.5 856.2,123.6 858.4,124.8 860.7,126.1 863.0,127.8 865.3,129.6 867.5,131.3 869.8,133.2 872.1,135.8 874.4,138.2 876.6,140.7 878.9,142.9 881.2,145.2 883.5,147.5 885.7,149.9 888.0,152.3"/><polyline class="g-prezzo" points="58.0,71.5 60.3,74.0 62.5,66.4 64.8,47.0 67.1,45.6 69.4,35.4 71.6,40.8 73.9,49.4 76.2,52.8 78.5,58.3 80.7,76.2 83.0,46.2 85.3,30.8 87.6,45.4 89.8,59.8 92.1,62.2 94.4,63.0 96.7,59.8 98.9,48.2 101.2,52.0 103.5,51.7 105.8,62.1 108.0,60.0 110.3,69.2 112.6,73.6 114.8,70.2 117.1,85.0 119.4,94.0 121.7,77.4 123.9,78.4 126.2,77.8 128.5,78.3 130.8,82.8 133.0,86.7 135.3,92.8 137.6,87.4 139.9,81.2 142.1,80.0 144.4,85.1 146.7,80.8 149.0,81.6 151.2,75.5 153.5,62.1 155.8,59.7 158.1,56.8 160.3,47.9 162.6,40.8 164.9,52.4 167.2,47.0 169.4,53.2 171.7,53.3 174.0,44.6 176.2,45.2 178.5,28.6 180.8,26.6 183.1,37.0 185.3,30.6 187.6,33.7 189.9,54.1 192.2,59.4 194.4,77.6 196.7,68.6 199.0,71.6 201.3,74.3 203.5,74.4 205.8,96.2 208.1,82.4 210.4,74.9 212.6,79.5 214.9,98.2 217.2,99.2 219.5,129.1 221.7,140.7 224.0,131.9 226.3,148.8 228.5,162.7 230.8,196.8 233.1,175.4 235.4,174.0 237.6,174.7 239.9,175.8 242.2,185.4 244.5,193.9 246.7,196.3 249.0,181.7 251.3,172.4 253.6,177.1 255.8,176.4 258.1,179.5 260.4,188.4 262.7,186.2 264.9,180.8 267.2,179.2 269.5,196.0 271.8,197.2 274.0,194.9 276.3,172.6 278.6,177.6 280.8,187.7 283.1,181.1 285.4,183.5 287.7,176.0 289.9,175.2 292.2,165.2 294.5,170.5 296.8,181.0 299.0,183.8 301.3,188.1 303.6,180.3 305.9,178.1 308.1,176.4 310.4,175.6 312.7,172.5 315.0,172.3 317.2,160.7 319.5,153.1 321.8,155.6 324.1,167.6 326.3,170.0 328.6,168.1 330.9,175.5 333.2,176.6 335.4,163.8 337.7,165.5 340.0,163.4 342.2,176.4 344.5,185.3 346.8,187.6 349.1,189.4 351.3,186.7 353.6,185.2 355.9,189.8 358.2,195.2 360.4,191.7 362.7,190.6 365.0,186.5 367.3,192.5 369.5,178.5 371.8,186.5 374.1,184.6 376.4,180.8 378.6,180.5 380.9,189.1 383.2,176.2 385.5,183.3 387.7,180.4 390.0,170.1 392.3,170.8 394.5,177.4 396.8,184.1 399.1,179.6 401.4,177.7 403.6,175.5 405.9,177.5 408.2,177.3 410.5,177.3 412.7,175.5 415.0,180.8 417.3,182.7 419.6,185.2 421.8,185.2 424.1,183.5 426.4,182.2 428.7,183.2 430.9,182.6 433.2,177.1 435.5,169.9 437.8,171.8 440.0,162.8 442.3,160.0 444.6,151.8 446.8,149.7 449.1,157.1 451.4,165.0 453.7,162.5 455.9,169.8 458.2,176.5 460.5,179.9 462.8,179.5 465.0,182.4 467.3,177.7 469.6,174.9 471.9,182.1 474.1,178.7 476.4,179.8 478.7,180.4 481.0,183.7 483.2,187.0 485.5,187.7 487.8,187.9 490.1,186.1 492.3,187.0 494.6,189.9 496.9,207.5 499.2,214.0 501.4,220.8 503.7,233.7 506.0,237.4 508.2,226.7 510.5,225.8 512.8,230.5 515.1,234.9 517.3,225.8 519.6,225.9 521.9,220.6 524.2,214.8 526.4,207.9 528.7,209.2 531.0,212.9 533.3,218.7 535.5,218.6 537.8,209.9 540.1,211.8 542.4,213.2 544.6,218.8 546.9,222.9 549.2,223.7 551.5,213.3 553.7,216.8 556.0,214.6 558.3,205.3 560.5,208.9 562.8,199.4 565.1,191.3 567.4,187.1 569.6,188.6 571.9,189.0 574.2,188.1 576.5,191.4 578.7,198.4 581.0,197.8 583.3,197.7 585.6,201.0 587.8,200.7 590.1,205.5 592.4,198.3 594.7,199.7 596.9,204.6 599.2,205.3 601.5,204.1 603.8,202.0 606.0,198.5 608.3,197.6 610.6,198.0 612.8,203.2 615.1,208.1 617.4,206.6 619.7,201.1 621.9,207.5 624.2,208.4 626.5,208.8 628.8,206.7 631.0,210.8 633.3,213.1 635.6,209.0 637.9,209.1 640.1,208.5 642.4,207.9 644.7,211.2 647.0,208.8 649.2,202.9 651.5,202.3 653.8,203.0 656.1,202.3 658.3,203.9 660.6,202.3 662.9,204.5 665.2,204.6 667.4,206.5 669.7,202.9 672.0,200.3 674.2,179.5 676.5,173.7 678.8,158.6 681.1,158.1 683.3,154.3 685.6,145.7 687.9,151.4 690.2,137.7 692.4,119.9 694.7,132.6 697.0,128.9 699.3,138.7 701.5,135.3 703.8,142.9 706.1,141.9 708.4,133.0 710.6,138.0 712.9,134.9 715.2,126.6 717.5,133.4 719.7,134.5 722.0,138.9 724.3,146.3 726.5,136.9 728.8,138.5 731.1,144.5 733.4,136.6 735.6,150.7 737.9,146.5 740.2,138.9 742.5,111.1 744.7,115.3 747.0,115.0 749.3,95.7 751.6,96.6 753.8,105.4 756.1,100.4 758.4,87.7 760.7,89.4 762.9,88.0 765.2,95.8 767.5,95.1 769.8,97.8 772.0,96.9 774.3,96.4 776.6,93.9 778.8,89.1 781.1,91.0 783.4,91.2 785.7,102.3 787.9,119.1 790.2,120.2 792.5,117.9 794.8,114.7 797.0,128.8 799.3,126.0 801.6,132.4 803.9,129.5 806.1,132.1 808.4,134.5 810.7,132.9 813.0,130.4 815.2,126.9 817.5,125.5 819.8,134.0 822.1,136.0 824.3,137.2 826.6,139.8 828.9,141.0 831.2,139.9 833.4,137.1 835.7,154.2 838.0,152.2 840.2,154.3 842.5,156.7 844.8,163.2 847.1,160.9 849.3,154.1 851.6,169.8 853.9,167.7 856.2,168.6 858.4,176.8 860.7,176.3 863.0,184.7 865.3,184.7 867.5,188.7 869.8,197.2 872.1,217.2 874.4,211.0 876.6,214.0 878.9,205.0 881.2,208.9 883.5,210.1 885.7,220.9 888.0,215.9"/><circle class="g-punto" cx="888.0" cy="215.9" r="4"/></svg></figure>
+
+<div class="kpi">
+  <div><b>$70.66</b><span>price, <span class="neg">−44.9% in 1 year</span></span></div>
+  <div><b>$41.8bn</b><span>market cap, #7 · 92.8% of FDV circulating</span></div>
+  <div><b>$1.34bn</b><span>protocol revenue 1y, <span class="neg">−37% last 30d vs prior 30d</span></span></div>
+  <div><b>$4.60bn</b><span>TVL, <span class="neg">−48.8% in 1 year</span></span></div>
+</div>
+
+<div class="griglia4">
+  <div class="card"><h3>What is it worth?</h3><p class="grande">$47–79</p><p>This is the range from two multiple-based methods (market cap to revenue, market cap to TVL). The central cells are about $54 and $62, so today's price sits in the upper half of the range. <span class="rif">§2</span> <span class="rif">§3</span></p></div>
+  <div class="card"><h3>What drives the price?</h3><p class="grande">Bitcoin ×1.22</p><p>SOL's correlation with Bitcoin is 0.85, and on average it moves 1.22% for each 1% move in Bitcoin. The wider mood matters too: the Fear &amp; Greed index is at 12 and the VIX volatility index at 36. Network fundamentals have mattered less in the short term. <span class="rif">§8</span> <span class="rif">§9</span> <span class="rif">§10</span></p></div>
+  <div class="card"><h3>How much could it fall?</h3><p class="grande">−15% to −37%</p><p>The nearest supports are $64.42 and $60.41, and the 52-week closing low is $62.18. A two-standard-deviation one-month move at the current 64% volatility would bring the price to about $44. The maximum drawdown over the last 12 months was −57.6%. <span class="rif">§7</span></p></div>
+  <div class="card"><h3>Versus the market?</h3><p class="grande">Lagging</p><p>Over one year SOL fell 44.9%, against −29.4% for Bitcoin and +5.7% for the S&amp;P 500. Over the past month it fell 31.8%, against −26.1% for Bitcoin. Like a high-beta crypto asset, it falls more than Bitcoin when the market drops. <span class="rif">§2</span> <span class="rif">§10</span></p></div>
+</div>
+
+<section><h2>Scorecard: strong infrastructure, weak market backdrop</h2>
+<div class="tabella"><table class="punteggi">
+  <tr><th>Area</th><th class="n">Score</th><th></th><th class="n">Weight</th><th>Reason</th></tr>
+  <tr><td>Real usage and revenue</td><td class="n">6</td><td><div class="barra" style="--v:6"></div></td><td class="n">25%</td><td>$3.79bn in user fees and $1.34bn in revenue over the year, which is large in absolute terms. But the last 30 days were down 37–38% on the previous 30, and TVL is down 48.8% over the year. <span class="rif">§3</span></td></tr>
+  <tr><td>Tokenomics and dilution</td><td class="n">5</td><td><div class="barra" style="--v:5"></div></td><td class="n">15%</td><td>92.8% of supply is already circulating, so few unlocks remain. But supply is uncapped: about 62,415 new SOL are created per day (≈3.6–3.9% a year), worth more than the revenue the network keeps. <span class="rif">§2</span> <span class="rif">§11 #40</span></td></tr>
+  <tr><td>Liquidity and market access</td><td class="n">9</td><td><div class="barra" style="--v:9"></div></td><td class="n">10%</td><td>$4.52bn traded in 24h (10.8% of market cap). It is listed on all major venues and has spot ETFs, CME micro futures and a staking ETP. <span class="rif">§2</span> <span class="rif">§6</span> <span class="rif">§11</span></td></tr>
+  <tr><td>Price trend and momentum</td><td class="n">2</td><td><div class="barra" style="--v:2"></div></td><td class="n">15%</td><td>The price is 26.5% below the 50-day average and 20% below the 200-day. It has broken its last swing low, MACD is negative and RSI is 28 (oversold). <span class="rif">§7</span></td></tr>
+  <tr><td>Leverage and derivatives positioning</td><td class="n">6</td><td><div class="barra" style="--v:6"></div></td><td class="n">10%</td><td>Open interest is down 36% in 30 days and funding is negative, so leverage has already been reduced. Retail accounts are still heavily long (3.9:1). <span class="rif">§4</span></td></tr>
+  <tr><td>Market and macro context</td><td class="n">2</td><td><div class="barra" style="--v:2"></div></td><td class="n">15%</td><td>Fear &amp; Greed is at 12, the VIX at 36, US equities are below their 200-day averages, US real 10-year yields are 2.88% (up 102 bp in a year) and Bitcoin is down 26% in a month. <span class="rif">§9</span> <span class="rif">§10</span></td></tr>
+  <tr><td>Institutional adoption and roadmap</td><td class="n">7</td><td><div class="barra" style="--v:7"></div></td><td class="n">10%</td><td>DTCC tokenisation is planned for 2027, J.P. Morgan funds and tokenised real-world assets are on the network, the Alpenglow consensus upgrade has gone live and a 2027 roadmap has been published. <span class="rif">§11</span> <span class="rif">external source</span></td></tr>
+  <tr><td><b>Weighted total</b></td><td class="n"><b>5.0</b></td><td><div class="barra" style="--v:5"></div></td><td class="n">100%</td><td>= 50/100</td></tr>
+</table></div>
+<p><span class="interpretazione">Interpretation: the three structural areas (usage, liquidity, adoption) average about 7/10. The two cyclical areas (momentum, macro) score 2/10. The score could therefore move quickly in either direction if the crypto market regime changes, without any change in Solana itself.</span></p>
+</section>
+
+<section><h2>1. What it is: a high-throughput, single-ledger Layer 1 that is now the #7 crypto asset</h2>
+<p>Solana is a proof-of-stake Layer 1 blockchain with its own native chain. It combines "Proof of History" (a cryptographic clock) with parallel smart-contract execution, which gives thousands of transactions per second at costs usually below one cent. It deliberately avoids sharding and layer-2 networks so that liquidity stays on one ledger <span class="rif">§1</span>. It ranks #7 by market capitalisation, with a market cap of $41.83bn and a fully diluted valuation of $45.08bn <span class="rif">§1</span> <span class="rif">§2</span>. Its early backers included FTX/Alameda, Multicoin, a16z, Polychain and Delphi <span class="rif">§1</span>.</p>
+<p>Recent technical milestones: the <b>Alpenglow</b> consensus upgrade went live on mainnet on 21 October 2026. It targets finality of about 150 ms, down from about 12.8 s. One independent measurement two days later found a median of 404 ms, so the target had not yet been fully reached <span class="rif">external source</span>. A CoinDesk interview reports that 60% of Solana already runs on DoubleZero, a dedicated network-infrastructure layer <span class="rif">§11 #2</span>. Anza's 2027 roadmap aims to double compute capacity, add native vector processing for on-chain AI and cut token-account costs by 80% <span class="rif">§11 #11</span> <span class="rif">external source</span>.</p>
+<p class="nota-box"><b>Good to know:</b> "Finality" is the time after which a transaction can no longer be reversed. Faster finality matters most for trading, payments and the settlement of tokenised securities, which is the use case DTCC is targeting.</p>
+</section>
+
+<section><h2>2. Fundamentals: the network still makes real money, but activity is shrinking fast</h2>
+<p><b>Facts.</b> Over the last 12 months users paid <b>$3.79bn in fees</b>, and the network kept <b>$1.34bn as revenue</b>. In the last 30 days fees were $295.3m (−38.4% vs the previous 30 days) and revenue was $104.2m (−37.1%) <span class="rif">§3</span>. The value deposited in Solana applications (TVL) is <b>$4.60bn</b>: −23.3% in 30 days, −17.2% in 90 days and −48.8% in one year <span class="rif">§3</span>. Market cap is 31.2× annual revenue and 9.09× TVL <span class="rif">§3</span>.</p>
+<div class="g" data-tipo="barre"><pre class="g-dati">
+{"titolo": "TVL vs price: change over the period (%)", "etichette": ["30 days","90 days / 3 months","1 year"],
+ "serie": [{"nome": "TVL", "valori": [-23.3,-17.2,-48.8], "colore": "viola"},
+           {"nome": "SOL price", "valori": [-31.8,-24.6,-44.9], "colore": "rosso"}],
+ "unita": "%", "stimati": [], "nota": "Source: §3 (TVL), §2 and §7 (price; 3-month figure from §7)"}
+</pre></div>
+<p>Some of the TVL decline is mechanical. TVL is measured in dollars, and much of it consists of SOL and other Solana tokens, so a 45% price fall alone reduces TVL even if no funds leave. <span class="interpretazione">Interpretation: because TVL fell about as much as the price over the year (−48.8% vs −44.9%), deposits seem to be shrinking mainly through price effects rather than a mass exit. The 37–38% month-on-month fall in fees and revenue is more meaningful: it points to a real drop in trading and speculative activity, consistent with the "extreme fear" market phase.</span></p>
+<p>Ecosystem headlines are mixed. Pump.fun, Raydium and Jupiter (key Solana apps) are reported to be "still positive" in 2026 even as SOL falls <span class="rif">§11 #29</span>. Tokenised real-world assets (RWA) are reported to exceed $5bn, with J.P. Morgan bringing its funds onto the network <span class="rif">§11 #28</span>. Tokenised trading of a newly listed AI company's shares on Solana reportedly beat a major broker's volume tenfold <span class="rif">§11 #6</span>.</p>
+<div class="g" data-tipo="barre"><pre class="g-dati">
+{"titolo": "Annual network economics vs new-token issuance ($bn)", "etichette": ["User fees (1y)","Protocol revenue (1y)","Revenue, last 30d annualised","New SOL issued per year at $70.66"],
+ "serie": [{"nome": "$bn", "valori": [3.79,1.34,1.27,1.61], "colore": "blu"}],
+ "unita": "", "stimati": [2,3], "nota": "Source: §3; issuance = 62,415 SOL/day (§11 #40) × 365 × $70.66 (§2), own calculation"}
+</pre></div>
+<p class="nota-box"><b>Conflicting data — revenue definition:</b> the dossier (DefiLlama) shows $1.34bn of annual revenue retained by the network <span class="rif">§3</span>. Token Terminal data reprinted by AMBCrypto gave Solana only <b>$206.8m</b> of trailing revenue for 2025 <span class="rif">external source</span>. The gap comes mainly from definitions (which fee components count as "revenue", e.g. priority fees and tips to validators vs only burned fees) and from different periods. This report uses the dossier figure, because it is the source used consistently for all the ratios here. On the narrower definition, Solana would look several times more expensive.</p>
+<p class="nota-box"><b>Conflicting data — RWA size:</b> one headline reports more than $5bn in RWA on Solana <span class="rif">§11 #28</span>. The Solana Foundation reported $3.7bn of non-stablecoin RWA in late July 2026, and RWA.xyz (cited by CryptoSlate) gave $2.31bn <span class="rif">external source</span>. The figures differ in date and in what they include. This report treats "several billion dollars and growing" as the robust fact, not any single figure.</p>
+</section>
+
+<section><h2>3. Tokenomics: almost fully unlocked, but uncapped issuance now outweighs revenue</h2>
+<p><b>Facts.</b> Circulating supply is 591.96m SOL out of a total of 637.98m (92.8%), and there is <b>no maximum supply</b> <span class="rif">§2</span>. A dossier headline says the network creates <b>62,415 new SOL per day</b> <span class="rif">§11 #40</span>. Own calculation: 62,415 × 365 ≈ 22.8m SOL a year, which is ≈3.85% of circulating supply or ≈3.57% of total supply. At $70.66 that is about <b>$1.61bn a year</b> of new tokens, against $1.34bn of annual revenue (or $1.27bn at the last-30-day pace) <span class="rif">§2</span> <span class="rif">§3</span>.</p>
+<p>External sources put the current annual inflation rate at between ≈3.69% and ≈3.88%, in line with the calculation above. In August 2026 validators approved a proposal to double the pace at which inflation declines towards a 1.5% floor. It passed narrowly, with 67.001% support against a 66.67% threshold <span class="rif">external source</span>. On 19 November, 2.31m SOL (≈$169m) were withdrawn from staking and moved to Coinbase Prime <span class="rif">§11 #10</span> <span class="rif">external source</span>.</p>
+<p><span class="interpretazione">Interpretation: most new SOL goes to stakers, so holders who stake are largely protected from dilution, while holders who do not stake are diluted by about 3.6–3.9% a year. The point that matters is that the network's retained revenue no longer covers the dollar value of issuance. Kaiko argues that for Layer 1s "earnings" should be measured as revenue minus token inflation. On that measure Solana is currently around −$0.3bn a year. The large unstake does not by itself mean the tokens were sold, since custody at Coinbase Prime is not an exchange order book. It is still a supply overhang to watch.</span></p>
+</section>
+
+<section><h2>4. Valuation: the price sits in the upper half of a fundamentals-based range</h2>
+<p>A crypto network has no earnings in the company sense, so two multiple-based methods are used. Both convert a network value into a per-token value using the 591.96m circulating SOL <span class="rif">§2</span>. The multiples are assumptions, not observed peer averages (see the peer note below).</p>
+<p><b>Method A — market cap / annual revenue.</b> Today's multiple is 31.2× on trailing revenue and ≈33× on the last-30-day pace <span class="rif">§3</span>. Rows show revenue scenarios and columns show multiples. Values are $ per SOL.</p>
+<div class="tabella"><table class="dati">
+  <tr><th>Annual revenue scenario</th><th class="n">× 15</th><th class="n">× 25</th><th class="n">× 35</th><th class="n">× 45</th></tr>
+  <tr><td>$0.90bn (activity falls a further ~30%)</td><td class="n">22.8</td><td class="n">38.0</td><td class="n">53.2</td><td class="n">68.4</td></tr>
+  <tr class="questo"><td>$1.27bn (last 30 days annualised)</td><td class="n">32.2</td><td class="n evidenza">53.6</td><td class="n">75.1</td><td class="n">96.5</td></tr>
+  <tr><td>$1.34bn (trailing 12 months)</td><td class="n">34.0</td><td class="n">56.6</td><td class="n">79.2</td><td class="n">101.9</td></tr>
+  <tr><td>$1.60bn (+20% recovery)</td><td class="n">40.5</td><td class="n">67.6</td><td class="n">94.6</td><td class="n">121.6</td></tr>
+</table></div>
+<p><span class="interpretazione">Interpretation: the highlighted cell ($1.27bn × 25×) is chosen because it uses the current, lower run-rate of activity and a multiple below today's 31×. Since issuance outweighs revenue, a discount to the current multiple seems more consistent with the data than a premium. A 25–35× band on the current run-rate gives <b>$54–75</b>.</span></p>
+
+<p><b>Method B — market cap / TVL.</b> Today the ratio is 9.09× <span class="rif">§3</span>. Rough own estimate for one year ago: TVL was about $8.98bn (from −48.8%), the price about $128 (from −44.9%) and circulating supply about 4% lower, which implies about 8× <span class="rif">§2</span> <span class="rif">§3</span>.</p>
+<div class="tabella"><table class="dati">
+  <tr><th>TVL scenario</th><th class="n">× 6</th><th class="n">× 8</th><th class="n">× 10</th><th class="n">× 12</th></tr>
+  <tr><td>$3.5bn (a further −24%)</td><td class="n">35.5</td><td class="n">47.3</td><td class="n">59.1</td><td class="n">71.0</td></tr>
+  <tr class="questo"><td>$4.6bn (current)</td><td class="n">46.6</td><td class="n evidenza">62.2</td><td class="n">77.7</td><td class="n">93.3</td></tr>
+  <tr><td>$6.0bn (+30% recovery)</td><td class="n">60.8</td><td class="n">81.1</td><td class="n">101.4</td><td class="n">121.6</td></tr>
+</table></div>
+<p><span class="interpretazione">Interpretation: at current TVL and the estimated year-ago multiple of about 8×, the central value is about $62. A 6–10× band gives <b>$47–78</b>. The two methods overlap at <b>$47–79</b>, with central cells at $54 and $62. Today's $70.66 is within the range, in its upper half. This is a range description, not a target. Both methods are very sensitive to activity: a recovery to $1.6bn of revenue or $6bn of TVL moves the central values into the $68–81 area.</span></p>
+
+<div class="g" data-tipo="orizzontali"><pre class="g-dati">
+{"titolo": "Valuation cells vs current price ($ per SOL)", "min": 20, "max": 125, "unita": " $",
+ "righe": [{"etichetta": "Revenue × 45, $1.34bn", "valore": 101.86, "colore": "grigio"},
+           {"etichetta": "TVL × 10, $4.6bn", "valore": 77.71, "colore": "verde"},
+           {"etichetta": "Revenue × 35, $1.27bn", "valore": 75.09, "colore": "verde"},
+           {"etichetta": "Current price", "valore": 70.66, "colore": "nero", "evidenza": true},
+           {"etichetta": "TVL × 8, $4.6bn (central)", "valore": 62.17, "colore": "blu"},
+           {"etichetta": "Revenue × 25, $1.27bn (central)", "valore": 53.64, "colore": "blu"},
+           {"etichetta": "TVL × 6, $4.6bn", "valore": 46.62, "colore": "rosso"},
+           {"etichetta": "Revenue × 15, $1.27bn", "valore": 32.18, "colore": "rosso"}]}
+</pre></div>
+
+<p><b>Peers.</b> The dossier contains no peer data. The external figures found are not comparable enough to anchor the multiples, so they are shown and struck through:</p>
+<div class="tabella"><table class="dati">
+  <tr><th>Network</th><th class="n">Value ($bn)</th><th class="n">Revenue ($bn/yr)</th><th class="n">Multiple</th><th>Note</th></tr>
+  <tr class="questo"><td>Solana (dossier, Nov 2026)</td><td class="n">41.83 (mcap)</td><td class="n">1.34</td><td class="n evidenza">31.2×</td><td>DefiLlama, §2–§3</td></tr>
+  <tr class="escluso"><td>Ethereum (Token Terminal, Q1 2026)</td><td class="n">290.0 (FDV)</td><td class="n">≈0.16 (Q1 × 4)</td><td class="n">≈1,800×</td><td>Different revenue definition (L1 fee revenue only, without layer-2 economics), different date: anomalous, not comparable</td></tr>
+  <tr class="escluso"><td>Tron (Token Terminal, 2025)</td><td class="n">n.d.</td><td class="n">3.5</td><td class="n">n.d.</td><td>No market cap in the source, revenue concentrated in stablecoin transfers, 2025 period: not comparable</td></tr>
+</table></div>
+<p class="esterna">External source: <a href="https://ambcrypto.com/l1-prices-collapsed-in-2025-but-fundamentals-held-firm-what-changed/">AMBCrypto — L1 prices collapsed in 2025 but fundamentals held firm</a> — Token Terminal revenue figures for Tron, Ethereum and Solana (2025). <a href="https://www.kucoin.com/news/flash/ethereum-2026-q1-report-gas-fees-decline-user-and-transaction-volume-reach-all-time-high">KuCoin — Ethereum 2026 Q1 report</a> — Ethereum's FDV and fee revenue.</p>
+</section>
+
+<section><h2>5. Price and technicals: a deteriorating trend, now oversold</h2>
+<p><b>Facts.</b> The last price is $70.76. That is 26.5% below the 50-day average ($96.21) and 20.0% below the 200-day average ($88.43). RSI(14) is 28.4 (oversold) and MACD is below its signal line <span class="rif">§7</span>. The price is 51.7% below the 52-week closing high ($146.51) and 13.8% above the low ($62.18) <span class="rif">§7</span>. The August–September rally (+41.5% and +14.6%) has been fully reversed by October–November (−19.2% and −25.8%) <span class="rif">§7</span>.</p>
+<div class="g" data-tipo="linee"><pre class="g-dati">
+{"titolo": "SOL monthly closes, last 12 months ($)", "etichette": ["Dec-25","Jan-26","Feb-26","Mar-26","Apr-26","May-26","Jun-26","Jul-26","Aug-26","Sep-26","Oct-26","Nov-26"],
+ "serie": [{"nome": "Monthly close", "valori": [124.52,105.49,84.67,83.04,83.04,82.34,73.56,72.79,103.01,118.04,95.42,70.76], "colore": "blu"}],
+ "unita": " $", "riferimento": {"valore": 88.43, "etichetta": "200-day average"}, "nota": "Source: §7 (November = latest price)"}
+</pre></div>
+<div class="g" data-tipo="orizzontali"><pre class="g-dati">
+{"titolo": "Price levels ($)", "min": 58, "max": 100, "unita": " $",
+ "righe": [{"etichetta": "50-day average", "valore": 96.21, "colore": "grigio"},
+           {"etichetta": "200-day average", "valore": 88.43, "colore": "grigio"},
+           {"etichetta": "Resistance (3 touches)", "valore": 76.50, "colore": "verde", "testo": "$76.50 (+8.1%)"},
+           {"etichetta": "Resistance (2 touches)", "valore": 75.42, "colore": "verde"},
+           {"etichetta": "Resistance (2 touches)", "valore": 73.80, "colore": "verde", "testo": "$73.80 (+4.3%)"},
+           {"etichetta": "Price", "valore": 70.76, "colore": "nero", "evidenza": true},
+           {"etichetta": "Support (1 touch)", "valore": 68.69, "colore": "rosso", "testo": "$68.69 (−2.9%)"},
+           {"etichetta": "Support (1 touch)", "valore": 64.42, "colore": "rosso", "testo": "$64.42 (−9.0%)"},
+           {"etichetta": "52-week closing low", "valore": 62.18, "colore": "arancio"},
+           {"etichetta": "Support (1 touch)", "valore": 60.41, "colore": "rosso", "testo": "$60.41 (−14.6%)"}]}
+</pre></div>
+<p>Volumes: the last session traded $4.53bn, 1.56× the 20-day average. Over the last 20 days, volume on up days was higher than on down days ($3.26bn vs $2.70bn). One-month on-balance volume (OBV) is −$19.6bn, against +$7.9bn over three months <span class="rif">§7</span>. <span class="interpretazione">Interpretation: the supports below the price have each been touched only once, so they are weaker than the resistances above, which have been touched two or three times. Oversold RSI and heavier up-day volume often come before relief bounces. However, the trend in averages and swing structure has not turned.</span></p>
+<p class="nota-box"><b>Conflicting data — "death cross":</b> the dossier states that the 50-day average ($96.21) is still <i>above</i> the 200-day ($88.43). The last cross was a golden cross on 2 September 2026, so in the dossier's own data a death cross is only a possibility <span class="rif">§7</span>. One headline speaks of SOL trading "after the death cross" <span class="rif">§11 #16</span>, while another says SOL "risks" one <span class="rif">§11 #30</span>. The difference probably comes from using different averages (exponential vs simple) or intraday data. This report uses the dossier's computed values. At the current pace of decline in the 50-day average, a cross in the coming weeks is plausible.</p>
+<p class="nota-box"><b>Minor discrepancies:</b> the price is $70.66 in §2 and $70.76 in §7, and the 1-year change is −44.9% vs −45.0%. These are small timing differences between data feeds. Market-cap metrics use $70.66 and technical levels use $70.76. The dossier also describes the swing structure as "rising highs and lows" while noting that the price has already broken the last higher low ($96.23). The second statement reflects the current situation <span class="rif">§7</span>.</p>
+</section>
+
+<section><h2>6. Downside: realistic short-term moves of 15–35%, and history shows more</h2>
+<p><b>Facts.</b> Annualised volatility is 62–64% across 1-month, 3-month and 1-year windows, and the average daily range (ATR) is 6.3% of the price <span class="rif">§7</span>. The worst decline in the last year was −57.6%, over 143 days from January to June 2026, and it has not been recovered <span class="rif">§7</span>. The price is 75.9% below the all-time high of $293.31 (January 2025) <span class="rif">§2</span>.</p>
+<p><b>Own calculations (illustrative, not forecasts):</b></p>
+<ul>
+  <li>Volatility-based: 64.2% annual volatility ≈ 18.5% for one month at one standard deviation. That puts a one-standard-deviation one-month move at about $57.6 on the downside, and a two-standard-deviation move (−37%) at about $44.5.</li>
+  <li>Beta-based: with a beta of 1.22 to Bitcoin <span class="rif">§8</span>, a further 20% fall in Bitcoin would imply about −24% for SOL (≈$53.7) on average. Actual moves vary widely around averages.</li>
+  <li>Level-based: the supports at $64.42 (−9%), $62.18 (the 52-week closing low, −12%) and $60.41 (−15%) are the first reference points <span class="rif">§7</span>.</li>
+</ul>
+<p><span class="interpretazione">Interpretation: the lower end of the valuation grid ($47–54) overlaps with the 1–2 standard-deviation range. A move to the low end of the fundamental range would therefore be within the asset's normal volatility, not an extreme event.</span></p>
+</section>
+
+<section><h2>7. Leverage: the derivatives market has already been flushed, but retail accounts are still mostly long</h2>
+<p><b>Facts.</b> Funding is negative on all three venues: −13.8% annualised on Binance, −13.3% on Bybit and −10.6% on Hyperliquid. This means short positions are paying long positions. Perpetual futures trade slightly below spot (−0.06% to −0.08%) <span class="rif">§4</span>. Binance open interest is down 19.8% in 7 days and 35.9% in 30 days. Total open interest across the three venues is about $1.28bn, ≈3.1% of market cap (own calculation) <span class="rif">§4</span>.</p>
+<div class="g" data-tipo="barre"><pre class="g-dati">
+{"titolo": "Derivatives by venue: open interest ($m) and annualised funding (%)", "etichette": ["Binance","Bybit","Hyperliquid"],
+ "serie": [{"nome": "Open interest ($m)", "valori": [582.11,402.75,295.97], "colore": "blu"},
+           {"nome": "Funding annualised (%)", "valori": [-13.8,-13.3,-10.6], "colore": "rosso"}],
+ "unita": "", "stimati": [], "nota": "Source: §4"}
+</pre></div>
+<div class="g" data-tipo="barre"><pre class="g-dati">
+{"titolo": "Long/short ratios: now vs 7 days ago", "etichette": ["Binance all accounts","Binance top traders (positions)","Bybit all accounts"],
+ "serie": [{"nome": "7 days ago", "valori": [3.63,2.30,3.99], "colore": "grigio"},
+           {"nome": "Now", "valori": [3.89,1.63,3.78], "colore": "arancio"}],
+ "unita": "", "stimati": [], "riferimento": {"valore": 1, "etichetta": "balanced"}, "nota": "Source: §4"}
+</pre></div>
+<p>The Binance account long/short ratio rose to 3.89 (from 3.63), while the large-trader position ratio fell to 1.63 (from 2.30) <span class="rif">§4</span>. Liquidation data is not available in the dossier <span class="rif">§4</span>. One headline mentions only $1.09m of liquidations on a +2% day <span class="rif">§11 #15</span>.</p>
+<p><span class="interpretazione">Interpretation: the account ratio counts accounts, not dollars. Many small long accounts alongside negative funding and larger traders cutting their longs suggest that the bigger money is positioned more defensively than retail. Falling open interest reduces the risk of a forced-liquidation cascade. Negative funding with a heavy short tilt has historically been a setting in which sharp short-covering rallies can happen. That is a known pattern, not a prediction.</span></p>
+</section>
+
+<section><h2>8. Market behaviour: SOL behaves like a higher-beta Bitcoin, with little diversification value</h2>
+<p><b>Facts.</b> SOL's correlation with Bitcoin is 0.85 over 1 year and 0.86 over 3 months, with a beta of 1.22. Its correlation with the Nasdaq is 0.46 (1y) and 0.55 (3m), and with gold 0.16. Its 1-year beta to the S&amp;P 500 is 1.87 <span class="rif">§8</span>.</p>
+<div class="g" data-tipo="orizzontali"><pre class="g-dati">
+{"titolo": "1-year correlation of SOL with other assets", "min": -0.3, "max": 1, "unita": "",
+ "righe": [{"etichetta": "Bitcoin", "valore": 0.85, "colore": "arancio", "evidenza": true},
+           {"etichetta": "Nasdaq", "valore": 0.46, "colore": "blu"},
+           {"etichetta": "S&P 500", "valore": 0.44, "colore": "blu"},
+           {"etichetta": "Gold", "valore": 0.16, "colore": "giallo"},
+           {"etichetta": "Euro Stoxx 50", "valore": 0.12, "colore": "grigio"},
+           {"etichetta": "US 10y yield", "valore": -0.05, "colore": "grigio"},
+           {"etichetta": "Dollar index (DXY)", "valore": -0.17, "colore": "verde"}]}
+</pre></div>
+<div class="g" data-tipo="barre"><pre class="g-dati">
+{"titolo": "Returns: SOL vs Bitcoin vs equities (%)", "etichette": ["1 month","3 months","1 year"],
+ "serie": [{"nome": "SOL", "valori": [-31.7,-24.6,-45.0], "colore": "viola"},
+           {"nome": "Bitcoin", "valori": [-26.1,-22.0,-29.4], "colore": "arancio"},
+           {"nome": "Nasdaq", "valori": [-15.3,-13.6,2.4], "colore": "blu"},
+           {"nome": "S&P 500", "valori": [-10.9,-10.0,5.7], "colore": "grigio"}],
+ "unita": "%", "stimati": [], "nota": "Source: §7 (SOL), §10 (others)"}
+</pre></div>
+<p>Market context: total crypto market cap is $2.09tn, Bitcoin dominance is 57.9% and Ethereum's 9.9% <span class="rif">§9</span>. The Fear &amp; Greed index is at 12 (7-day average 11, 30-day average 30) <span class="rif">§9</span>. A headline reports total crypto market cap 49.4% below its October 2025 peak, and SOL more than 70% below its high <span class="rif">§11 #22</span>. Macro conditions are tight: the VIX is at 35.9, the US 10-year yield at 5.04%, the real 10-year yield at 2.88%, US CPI inflation at 4.1%, the Fed funds rate at 3.88%, and the S&amp;P 500, Nasdaq and Euro Stoxx are all below their 200-day averages <span class="rif">§10</span>.</p>
+<p><span class="interpretazione">Interpretation: the 1-year betas show that the main swing factor for SOL is the crypto and risk-asset cycle, not Solana-specific news. High real yields and an equity drawdown with a VIX above 35 have historically been hostile to long-duration, non-yielding risk assets. A 67% positive retail sentiment vote on CoinGecko <span class="rif">§5</span> contrasts sharply with the market-wide fear reading. It reflects a self-selected community, not the market.</span></p>
+</section>
+
+<section><h2>9. Liquidity and access: deep, but part of the reported volume deserves scepticism</h2>
+<p>Average daily volume is $2.9bn (20 days) to $3.3bn (90 days). The 24-hour volume of $4.52bn equals 10.8% of market cap <span class="rif">§2</span> <span class="rif">§7</span>. Regulated access includes US spot ETFs, CME Micro SOL futures <span class="rif">§11 #39</span> and a CoinShares staking ETP <span class="rif">§11 #24</span>.</p>
+<div class="tabella"><table class="dati">
+  <tr><th>Exchange</th><th>Pair</th><th class="n">Volume 24h ($m)</th></tr>
+  <tr class="questo"><td>Binance</td><td>SOL/USDT</td><td class="n evidenza">344.74</td></tr>
+  <tr class="escluso"><td>FameEX</td><td>SOL/USDT</td><td class="n">315.33</td></tr>
+  <tr class="escluso"><td>BVOX</td><td>SOL/USDT</td><td class="n">277.16</td></tr>
+  <tr class="escluso"><td>Deepcoin</td><td>SOL/USDT</td><td class="n">276.62</td></tr>
+  <tr><td>Gate</td><td>SOL/USDT</td><td class="n">172.42</td></tr>
+  <tr class="escluso"><td>BTCC</td><td>SOL/USDT</td><td class="n">172.12</td></tr>
+  <tr><td>Bitget</td><td>SOL/USDT</td><td class="n">151.81</td></tr>
+  <tr class="escluso"><td>CoinUp.io</td><td>SOL/USDT</td><td class="n">145.97</td></tr>
+  <tr><td>Coinbase Exchange</td><td>SOL/USD</td><td class="n">143.53</td></tr>
+  <tr><td>Deribit Spot</td><td>SOL/USDC</td><td class="n">142.59</td></tr>
+</table></div>
+<p>Source: <span class="rif">§6</span>. Struck-through rows are smaller venues that report volumes close to Binance's or Coinbase's despite much smaller known market share. That pattern is typical of incentivised or wash-traded volume, so they are treated as anomalous. <span class="interpretazione">Interpretation: even without them, genuine liquidity on Binance, Coinbase, Bitget, Gate, Deribit and the derivatives venues is ample for an asset of this size.</span></p>
+</section>
+
+<section><h2>10. News flow: institutional pipeline building while price and flows weaken</h2>
+<ul class="notizie">
+  <li><span class="tag pos">positive</span> <b>DTCC picks Solana for its tokenisation service</b> (12 Nov) — DTCC is the main US securities settlement infrastructure. The Solana connection is planned for 2027. This is a long-dated validation, not near-term revenue. <span class="rif">§11 #25 #31</span> <span class="rif">external source</span></li>
+  <li><span class="tag pos">positive</span> <b>2027 roadmap: on-chain AI and faster blocks</b> (19 Nov) — compute capacity to double, token-account costs to fall 80%. Timelines were not detailed. <span class="rif">§11 #11</span> <span class="rif">external source</span></li>
+  <li><span class="tag pos">positive</span> <b>RWA reported above $5bn; J.P. Morgan funds on Solana</b> (14 Nov) — supports the tokenisation use case. External figures are lower (see §2 of this report). <span class="rif">§11 #28</span></li>
+  <li><span class="tag mix">mixed</span> <b>ETF flows</b> — the first major net outflow in 12 months was reported on 6 Nov <span class="rif">§11 #35</span>. On 21 Nov ETFs were reported to be "defying" the crypto sell-off <span class="rif">§11 #4</span>. The direction of flows is unclear.</li>
+  <li><span class="tag neg">negative</span> <b>2.31m SOL leave staking</b> (19 Nov) — ≈$169m moved to Coinbase Prime. This is potential supply, although custody is not the same as a sale. <span class="rif">§11 #10</span> <span class="rif">external source</span></li>
+  <li><span class="tag neu">neutral</span> <b>60% of the network runs on DoubleZero</b> (21 Nov) — an infrastructure performance upgrade with no direct price impact. <span class="rif">§11 #2</span></li>
+  <li><span class="tag mix">mixed</span> <b>Tokenised trading of a newly IPO'd AI company on Solana</b> (20 Nov) — shows on-chain equity-trading demand, but it is a one-off event. <span class="rif">§11 #6 #7</span></li>
+  <li><span class="tag pos">positive</span> <b>A large Italian bank reportedly raised its Solana exposure</b> (16 Nov) — a headline only; size not disclosed. <span class="rif">§11 #21</span></li>
+  <li><span class="tag pos">positive</span> <b>Bitwise adds managed vaults on Jupiter targeting ~8% yields; Bitwise also sees a major catalyst</b> (14–17 Nov) — institutional product activity. The bullish price figure in a related headline is an opinion and is not used here. <span class="rif">§11 #18 #19 #27</span></li>
+  <li><span class="tag neg">negative</span> <b>Solana event in China halted, local promoters investigated</b> (6 Nov) — limited direct impact, but a reminder of regulatory risk. <span class="rif">§11 #36</span></li>
+  <li><span class="tag neg">negative</span> <b>"Price struggles despite major upgrade"</b> (20 Nov) — the market is not rewarding technical progress for now. <span class="rif">§11 #5</span></li>
+</ul>
+<p class="esterna">External source: <a href="https://www.dtcc.com/press-releases/2026/dtcc-tokenization-service-to-connect-with-solana">DTCC press release — Tokenization Service to connect with Solana</a> — confirms the 12 Nov 2026 announcement. <a href="https://www.theblock.co/news/business/2026-11-12-dtcc-plans-bring-tokenized-securities-solana-second-half-2027-438559">The Block</a> places it in the <b>second half of 2027</b>, while one dossier headline says "Q2 2027" <span class="rif">§11 #31</span>. This report uses H2 2027 from the primary source. <a href="https://www.blockhead.co/2026/11/16/dtcc-to-connect-its-tokenization-service-to-solana-in-second-half-of-2027/">Blockhead</a> notes that the asset figures quoted refer to assets <i>eligible</i> for tokenisation, not assets already on-chain.</p>
+</section>
+
+<section><h2>11. Scenarios: the outcome depends mostly on the crypto cycle</h2>
+<div class="griglia2">
+  <div class="card rialzo"><h3>Bull case</h3><p class="nota">Towards the $78–95 area (upper valuation cells, back near the 200-day average)</p>
+    <ul><li>Bitcoin stabilises and risk appetite returns. With a beta of 1.22, SOL would tend to recover faster than Bitcoin.</li>
+    <li>Fees and revenue recover to the $1.34–1.6bn annual pace, and TVL returns towards $6bn.</li>
+    <li>Short covering from negative funding pushes the price through resistance at $73.80–76.50.</li>
+    <li>DTCC, J.P. Morgan and RWA growth build a "financial infrastructure" narrative, and ETF flows turn steadily positive.</li></ul>
+    <p class="invalida"><b>Would be invalidated by:</b> a weekly close below $60.41, another month of 30%+ declines in fees and revenue, or a new leg down in Bitcoin.</p></div>
+  <div class="card ribasso"><h3>Bear case</h3><p class="nota">Towards the $45–55 area (lower valuation cells, 1–2 standard-deviation move)</p>
+    <ul><li>Macro stress continues (VIX above 30, real yields rising) and Bitcoin breaks lower.</li>
+    <li>The 50-day average crosses below the 200-day (death cross), which confirms the long-term downtrend technically.</li>
+    <li>Revenue settles near $0.9–1.0bn a year, so dilution from issuance becomes more visible.</li>
+    <li>More large unstakes and ETF outflows add supply.</li></ul>
+    <p class="invalida"><b>Would be invalidated by:</b> a recovery and hold above the 200-day average ($88.43), with revenue growing again month on month.</p></div>
+</div>
+<p><span class="interpretazione">Interpretation: a sideways base case around $60–80 is consistent with the central valuation cells and the current supports and resistances. Probabilities are not assigned, because the dossier does not support a quantitative estimate.</span></p>
+</section>
+
+<div class="griglia3">
+  <div class="card"><b class="etichetta">Short term · weeks</b><h3>Sentiment and leverage dominate</h3>
+    <p class="k">What matters</p><p>Bitcoin's direction, the Fear &amp; Greed index recovering from 12, funding and open interest, whether $60–64 holds, and whether the death cross happens.</p>
+    <p class="k pos">Would improve the picture</p><p>Closes above $76.50 together with rising open interest and neutral funding. The RSI leaving oversold territory through higher prices.</p>
+    <p class="k neg">Would worsen the picture</p><p>A break below the 52-week closing low of $62.18, and funding flipping strongly positive while the price falls (crowded longs).</p></div>
+  <div class="card"><b class="etichetta">Medium term · months</b><h3>Activity and dilution</h3>
+    <p class="k">What matters</p><p>Whether monthly revenue stabilises around ~$100m or falls further, the trend in TVL, ETF flow direction, staking outflows, and the faster disinflation schedule taking effect.</p>
+    <p class="k pos">Would improve the picture</p><p>30-day revenue back above ~$165m (the previous 30-day level), and TVL above $5.5bn.</p>
+    <p class="k neg">Would worsen the picture</p><p>Revenue below $80m a month for several months, and continued net ETF outflows.</p></div>
+  <div class="card"><b class="etichetta">Long term · 1 year+</b><h3>Institutional settlement layer?</h3>
+    <p class="k">What matters</p><p>Delivery of the DTCC integration (H2 2027), RWA growth, Alpenglow reaching its finality targets, and execution of the 2027 roadmap.</p>
+    <p class="k pos">Would improve the picture</p><p>Live tokenised securities volume on Solana, and revenue covering issuance again.</p>
+    <p class="k neg">Would worsen the picture</p><p>Delays, network outages, regulatory action, or institutions favouring competing chains.</p></div>
+</div>
+
+<section><h2>What would change the picture</h2>
+<div class="tabella"><table class="dati soglie">
+  <tr><th>Indicator</th><th>Would weaken the picture</th><th>Would strengthen the picture</th></tr>
+  <tr><td>Price (daily/weekly close)</td><td class="neg">below $60.41 (lowest support listed)</td><td class="pos">above $76.50 (3-touch resistance)</td></tr>
+  <tr><td>Trend averages</td><td class="neg">50-day average crossing below the 200-day ($88.43)</td><td class="pos">price back above the 200-day average</td></tr>
+  <tr><td>Protocol revenue (30 days)</td><td class="neg">below $80m</td><td class="pos">above $165m</td></tr>
+  <tr><td>TVL</td><td class="neg">below $3.5bn</td><td class="pos">above $5.5bn</td></tr>
+  <tr><td>Funding (annualised)</td><td class="neg">above +30% while the price falls (crowded longs)</td><td class="pos">near neutral with rising open interest and price</td></tr>
+  <tr><td>Bitcoin</td><td class="neg">a new low below ~$60k</td><td class="pos">back above its 200-day average (≈$72k, own estimate from §10)</td></tr>
+  <tr><td>Fear &amp; Greed</td><td class="neg">staying below 20 for weeks</td><td class="pos">back above 40</td></tr>
+  <tr><td>Supply</td><td class="neg">further multi-million SOL unstakes moving to exchanges</td><td class="pos">staking inflows; revenue exceeding the dollar value of issuance</td></tr>
+</table></div>
+</section>
+
+<section><h2>Confidence and missing data</h2>
+<p>Confidence is <b>medium</b>. The market, derivatives, technical and macro data are complete and consistent <span class="rif">§2</span>–<span class="rif">§10</span>. The weaknesses are:</p>
+<ul>
+  <li>There is no on-chain usage data (active addresses, transaction counts, non-vote transactions) and no staking ratio. Adoption data consists only of CoinGecko watchlists (1.4m) and votes <span class="rif">§5</span>.</li>
+  <li>Developer activity and GitHub metrics are missing. Liquidation data is "not available" <span class="rif">§4</span>. Bybit and Hyperliquid 30-day funding averages are "n.d." <span class="rif">§4</span>.</li>
+  <li>The issuance figure comes from a news headline <span class="rif">§11 #40</span>, not from a data field. It matches external estimates of ≈3.7–3.9%.</li>
+  <li>There are no peer data in the dossier, and the external peer figures use different definitions, so the valuation multiples are assumptions.</li>
+  <li>Revenue definitions differ greatly between data providers ($1.34bn vs $206.8m), which changes the valuation picture materially.</li>
+  <li>News items are headlines only and their details were not read in full, apart from the externally checked items.</li>
+</ul>
+</section>
+
+<section><h2>External sources</h2>
+<p class="esterna">External source: <a href="https://www.dtcc.com/press-releases/2026/dtcc-tokenization-service-to-connect-with-solana">DTCC — Tokenization Service to connect with Solana</a> — primary confirmation of the DTCC news. <a href="https://www.theblock.co/news/business/2026-11-12-dtcc-plans-bring-tokenized-securities-solana-second-half-2027-438559">The Block</a> — timing in H2 2027; the service went live on 28 Oct 2026 on Canton and Besu.</p>
+<p class="esterna">External source: <a href="https://cointelegraph.com/news/solanas-alpenglow-launches-mainnet-99-faster-finality">Cointelegraph — Alpenglow launches on mainnet</a> and <a href="https://solana.com/upgrades/alpenglow">Solana — Alpenglow</a> — activation on 21 Oct 2026 (epoch 1064), ~150 ms finality target. <a href="https://crypto.news/solana-promised-faster-finality-validators-now-have-to-prove-it-works/">crypto.news</a> — measured median of 404 ms, so the target was not yet met.</p>
+<p class="esterna">External source: <a href="https://beincrypto.com/solana-2027-roadmap-sol-price-impact/">BeInCrypto — Solana 2027 roadmap</a> and <a href="https://coingape.com/solana-unveils-2027-roadmap-to-double-compute-capacity-and-cut-unit-use-by-80/">CoinGape</a> — roadmap details (500m compute units per second, vector processing, −80% token-account cost).</p>
+<p class="esterna">External source: <a href="https://en.coinotag.com/solana-whales-unstake-2-31-million-sol-coinbase-prime">Coinotag — whales unstake 2.31m SOL to Coinbase Prime</a> — confirms the 19 Nov unstake (≈$169.4m). <a href="https://www.theblock.co/news/ecosystems/2026-08-31-solana-fees-hit-record-as-validators-double-pace-of-inflation-cuts-413135">The Block — validators double pace of inflation cuts</a> and <a href="https://crypto.news/solana-inflation-cut-clears-vote-with-67-support/">crypto.news</a> — August 2026 disinflation vote (67.001% support).</p>
+<p class="esterna">External source: <a href="https://solana.com/news/overview-of-institutional-real-world-assets-on-solana">Solana Foundation — institutional RWA overview</a> ($3.7bn, July 2026) and <a href="https://cryptoslate.com/jpmorgan-taps-ethereum-and-solana-to-build-an-institutional-cash-stack/">CryptoSlate — J.P. Morgan on Ethereum and Solana</a> — J.P. Morgan tokenised money-market funds; lower RWA estimates than the dossier headline.</p>
+<p class="esterna">External source: <a href="https://www.coinperps.com/etf/solana">CoinPerps — Solana ETF flows</a> — +$11.7m on 16 Nov 2026 and −$12.6m over 7 days. Its launch date and cumulative figures disagree with other sources, so it is used only as a qualitative indication of mixed flows.</p>
+<p class="esterna">External source: <a href="https://ambcrypto.com/l1-prices-collapsed-in-2025-but-fundamentals-held-firm-what-changed/">AMBCrypto (Token Terminal data)</a> and <a href="https://research.kaiko.com/insights/the-pressure-of-dilution-on-layer-1-valuations">Kaiko — the pressure of dilution on Layer 1 valuations</a> — alternative revenue definition and the "revenue minus inflation" framework.</p>
+<p class="nota">This document is an informational data report. It is not investment advice and contains no recommendation to buy, sell or hold any asset.</p>
+</section>
+<footer><b>Informational data report, not investment advice.</b> It does not take into account your objectives, financial situation or risk tolerance and does not recommend buying, selling or holding any asset. Data may be incomplete or delayed. Sources: CoinGecko, DefiLlama, Binance/Bybit/Hyperliquid public APIs, alternative.me, FRED, Yahoo Finance (macro and correlations), Google News, plus the external sources cited in the text. Prepared by Moonlighter (an AI) on 2026-11-21 18:20. https://work247ia.github.io</footer>
+</main><script>/* Libreria dei grafici dei report.
+   Claude scrive solo i DATI, in blocchi come:
+     <div class="g" data-tipo="barre"><pre class="g-dati">{ ...JSON... }</pre></div>
+   e questo script li disegna (SVG, si adatta alla larghezza, tema chiaro/scuro).
+   Tipi: barre, linee, orizzontali, matrice, calcolatore. */
+(function () {
+  "use strict";
+  var COLORI = {blu: "var(--accento)", verde: "var(--pos)", rosso: "var(--neg)", giallo: "var(--neu)",
+    grigio: "var(--tenue)", viola: "var(--m200)", arancio: "var(--m50)", nero: "var(--testo)"};
+  var colore = function (c, i) {
+    if (c && COLORI[c]) return COLORI[c];
+    return ["var(--accento)", "var(--m50)", "var(--m200)", "var(--tenue)", "var(--pos)"][(i || 0) % 5];
+  };
+  var esc = function (s) {
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+      return {"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c];
+    });
+  };
+  var fmt = function (v, unita, decimali) {
+    if (v == null || isNaN(v)) return "n.d.";
+    var d = decimali != null ? decimali : (Math.abs(v) >= 100 ? 0 : Math.abs(v) >= 10 ? 1 : 2);
+    return v.toLocaleString("it-IT", {maximumFractionDigits: d, minimumFractionDigits: 0}) + (unita || "");
+  };
+  var testa = function (d) {
+    return (d.titolo ? "<h3>" + esc(d.titolo) + "</h3>" : "") + (d.sottotitolo ? '<p class="g-sotto">' + esc(d.sottotitolo) + "</p>" : "");
+  };
+  var piede = function (d) { return d.nota ? '<p class="g-nota">' + esc(d.nota) + "</p>" : ""; };
+  var legenda = function (serie) {
+    if (serie.length < 2) return "";
+    return '<div class="g-legenda">' + serie.map(function (s, i) {
+      return '<span><i style="background:' + colore(s.colore, i) + '"></i>' + esc(s.nome) + "</span>";
+    }).join("") + "</div>";
+  };
+  // disegna dentro un contenitore che si ridisegna quando cambia la larghezza
+  var tela = function (box, altezza, disegna) {
+    var area = document.createElement("div");
+    area.className = "g-area";
+    box.appendChild(area);
+    var ridisegna = function () {
+      var W = Math.max(area.clientWidth, 260);
+      area.innerHTML = '<svg viewBox="0 0 ' + W + " " + altezza + '" width="' + W + '" height="' + altezza + '">' + disegna(W, altezza) + "</svg>";
+    };
+    ridisegna();
+    if (window.ResizeObserver) new ResizeObserver(ridisegna).observe(area);
+  };
+  var scala = function (valori, rif) {
+    var tutti = valori.filter(function (v) { return v != null && !isNaN(v); });
+    if (rif != null) tutti.push(rif);
+    var lo = Math.min(0, Math.min.apply(null, tutti)), hi = Math.max(0, Math.max.apply(null, tutti));
+    if (hi === lo) hi = lo + 1;
+    var m = (hi - lo) * 0.12;
+    return {lo: lo < 0 ? lo - m : 0, hi: hi + m};
+  };
+
+  var DISEGNA = {
+    barre: function (box, d) {
+      var serie = d.serie || [], et = d.etichette || [], stimati = d.stimati || [];
+      var tutti = [].concat.apply([], serie.map(function (s) { return s.valori || []; }));
+      var sc = scala(tutti, d.riferimento && d.riferimento.valore);
+      box.innerHTML = testa(d) + legenda(serie);
+      tela(box, d.altezza || 230, function (W, H) {
+        var p = {l: 6, r: 6, t: 20, b: 24}, ih = H - p.t - p.b;
+        var y = function (v) { return p.t + ih * (sc.hi - v) / (sc.hi - sc.lo); };
+        var gw = (W - p.l - p.r) / Math.max(et.length, 1), bw = Math.min(46, gw * 0.74 / Math.max(serie.length, 1));
+        var o = '<line class="g-base" x1="0" x2="' + W + '" y1="' + y(0) + '" y2="' + y(0) + '"/>';
+        if (d.riferimento) {
+          var yr = y(d.riferimento.valore);
+          o += '<line class="g-rif" x1="0" x2="' + W + '" y1="' + yr + '" y2="' + yr + '"/><text class="g-asse" x="' + (W - 4) + '" y="' + (yr - 5) + '" text-anchor="end">' + esc(d.riferimento.etichetta || "") + " " + fmt(d.riferimento.valore, d.unita) + "</text>";
+        }
+        et.forEach(function (lab, i) {
+          var cx = p.l + gw * i + gw / 2;
+          serie.forEach(function (s, j) {
+            var v = (s.valori || [])[i];
+            if (v == null || isNaN(v)) return;
+            var x = cx - bw * serie.length / 2 + j * bw, y0 = y(Math.max(v, 0)), h = Math.abs(y(v) - y(0)), c = colore(s.colore, j);
+            o += stimati.indexOf(i) >= 0
+              ? '<rect x="' + (x + 2) + '" y="' + y0 + '" width="' + (bw - 4) + '" height="' + Math.max(h, 1) + '" rx="2" fill="none" stroke="' + c + '" stroke-width="2" stroke-dasharray="5 4"/>'
+              : '<rect x="' + (x + 1) + '" y="' + y0 + '" width="' + (bw - 2) + '" height="' + Math.max(h, 1) + '" rx="2" fill="' + c + '"/>';
+            if (bw >= 24) o += '<text class="g-val" x="' + (x + bw / 2) + '" y="' + (v >= 0 ? y0 - 5 : y(v) + 13) + '" text-anchor="middle">' + fmt(v, d.unita) + "</text>";
+          });
+          o += '<text class="g-asse" x="' + cx + '" y="' + (H - 7) + '" text-anchor="middle">' + esc(lab) + "</text>";
+        });
+        return o;
+      });
+      if (stimati.length) box.insertAdjacentHTML("beforeend", '<p class="g-nota">Tratteggiate: stime.</p>');
+      box.insertAdjacentHTML("beforeend", piede(d));
+    },
+
+    linee: function (box, d) {
+      var serie = d.serie || [], et = d.etichette || [];
+      var tutti = [].concat.apply([], serie.map(function (s) { return s.valori || []; })).filter(function (v) { return v != null; });
+      var lo = Math.min.apply(null, tutti), hi = Math.max.apply(null, tutti), m = (hi - lo) * 0.1 || Math.abs(hi) * 0.1 || 1;
+      lo -= m; hi += m;
+      box.innerHTML = testa(d) + legenda(serie);
+      tela(box, d.altezza || 230, function (W, H) {
+        var p = {l: 48, r: 12, t: 14, b: 24};
+        var x = function (i) { return p.l + (W - p.l - p.r) * (et.length > 1 ? i / (et.length - 1) : 0.5); };
+        var y = function (v) { return p.t + (H - p.t - p.b) * (hi - v) / (hi - lo); };
+        var o = "";
+        for (var k = 0; k <= 4; k++) {
+          var v = lo + (hi - lo) * k / 4;
+          o += '<line class="g-griglia" x1="' + p.l + '" x2="' + (W - p.r) + '" y1="' + y(v) + '" y2="' + y(v) + '"/><text class="g-asse" x="' + (p.l - 6) + '" y="' + (y(v) + 4) + '" text-anchor="end">' + fmt(v) + "</text>";
+        }
+        var passo = Math.ceil(et.length / Math.max(2, Math.floor(W / 70)));
+        et.forEach(function (lab, i) { if (i % passo === 0 || i === et.length - 1) o += '<text class="g-asse" x="' + x(i) + '" y="' + (H - 7) + '" text-anchor="middle">' + esc(lab) + "</text>"; });
+        serie.forEach(function (s, j) {
+          var pts = (s.valori || []).map(function (v, i) { return v == null ? null : x(i).toFixed(1) + "," + y(v).toFixed(1); }).filter(Boolean).join(" ");
+          o += '<polyline points="' + pts + '" fill="none" stroke="' + colore(s.colore, j) + '" stroke-width="2.2"' + (s.tratteggio ? ' stroke-dasharray="6 4"' : "") + "/>";
+          var ult = (s.valori || []).length - 1;
+          if (ult >= 0 && s.valori[ult] != null) o += '<circle cx="' + x(ult) + '" cy="' + y(s.valori[ult]) + '" r="3.5" fill="' + colore(s.colore, j) + '"/><text class="g-val" x="' + (x(ult) - 6) + '" y="' + (y(s.valori[ult]) - 8) + '" text-anchor="end">' + fmt(s.valori[ult], d.unita) + "</text>";
+        });
+        return o;
+      });
+      box.insertAdjacentHTML("beforeend", piede(d));
+    },
+
+    orizzontali: function (box, d) {
+      var righe = d.righe || [], valori = righe.map(function (r) { return r.valore; });
+      var lo = d.min != null ? d.min : Math.min(0, Math.min.apply(null, valori));
+      var hi = d.max != null ? d.max : Math.max(0, Math.max.apply(null, valori));
+      if (hi === lo) hi = lo + 1;
+      var pos = function (v) { return Math.max(0, Math.min(100, (v - lo) / (hi - lo) * 100)); };
+      var zero = pos(Math.max(lo, Math.min(0, hi)));
+      box.innerHTML = testa(d) + '<div class="g-oriz">' + righe.map(function (r, i) {
+        var a = pos(r.valore), sx = Math.min(a, zero), w = Math.max(Math.abs(a - zero), 0.8);
+        if (lo > 0) { sx = 0; w = Math.max(a, 0.8); }
+        return '<div class="g-riga' + (r.evidenza ? " g-evid" : "") + '"><span>' + esc(r.etichetta) + '</span><span class="g-traccia"><i style="left:' + sx + "%;width:" + w + "%;background:" + colore(r.colore, i) + '"></i></span><b>' + esc(r.testo != null ? r.testo : fmt(r.valore, d.unita)) + "</b></div>";
+      }).join("") + "</div>" + piede(d);
+    },
+
+    matrice: function (box, d) {
+      var righe = d.righe || [], colonne = d.colonne || [], celle = d.celle || [];
+      var h = testa(d) + '<div class="g-matrice" style="grid-template-columns:minmax(90px,150px) repeat(' + colonne.length + ',minmax(0,1fr))"><span></span>';
+      colonne.forEach(function (c) { h += '<span class="g-mh">' + esc(c) + "</span>"; });
+      righe.forEach(function (r, i) {
+        h += '<span class="g-mv">' + esc(r) + "</span>";
+        colonne.forEach(function (_, j) {
+          var c = (celle[i] || [])[j] || {};
+          h += '<div class="g-cella g-' + esc(c.tono || "attesa") + '"><b>' + esc(c.titolo) + "</b><p>" + esc(c.testo) + "</p></div>";
+        });
+      });
+      box.innerHTML = h + "</div>" + piede(d);
+    },
+
+    calcolatore: function (box, d) {
+      var val = d.valuta || "EUR", cali = d.cali || [{valore: 30, etichetta: "probabile"}, {valore: 50, etichetta: "già visto"}];
+      var scelto = d.predefinito || cali[Math.min(1, cali.length - 1)].valore;
+      box.innerHTML = testa(d) + '<div class="g-calc"><div>' +
+        '<label>Valore del portafoglio<input type="number" class="g-pv" value="' + (d.portafoglio || 50000) + '" min="0" step="1000"></label>' +
+        '<label>Perdita massima accettabile su questo titolo (% del portafoglio)<input type="number" class="g-ml" value="' + (d.perdita || 2) + '" min="0.1" step="0.5"></label>' +
+        '<p class="g-sotto">Calo ipotizzato da qui</p><div class="g-cali">' + cali.map(function (c) {
+          return '<button type="button" data-d="' + c.valore + '"' + (c.valore === scelto ? ' class="on"' : "") + ">" + c.valore + "% · " + esc(c.etichetta) + "</button>";
+        }).join("") + '</div></div><div class="g-out"><p>Posizione massima</p><p class="g-res"></p><p class="g-pct"></p><p class="g-tr"></p></div></div>' + piede(d);
+      var q = function (s) { return box.querySelector(s); };
+      var eur = function (v) { return v.toLocaleString("it-IT", {style: "currency", currency: val, maximumFractionDigits: 0}); };
+      var calcola = function () {
+        var P = parseFloat(q(".g-pv").value) || 0, L = parseFloat(q(".g-ml").value) || 0, pos = P * (L / 100) / (scelto / 100);
+        q(".g-res").textContent = eur(pos);
+        q(".g-pct").textContent = (P ? (pos / P * 100).toLocaleString("it-IT", {maximumFractionDigits: 1}) : 0) + "% del portafoglio. Se il titolo cala del " + scelto + "%, perdi " + eur(P * L / 100) + ".";
+        q(".g-tr").textContent = "In tre tranche: circa " + eur(pos / 3) + " ciascuna.";
+      };
+      q(".g-cali").addEventListener("click", function (e) {
+        var b = e.target.closest("button"); if (!b) return;
+        scelto = +b.dataset.d;
+        box.querySelectorAll(".g-cali button").forEach(function (x) { x.classList.toggle("on", x === b); });
+        calcola();
+      });
+      q(".g-pv").addEventListener("input", calcola);
+      q(".g-ml").addEventListener("input", calcola);
+      calcola();
+    }
+  };
+
+  document.querySelectorAll(".g[data-tipo]").forEach(function (box) {
+    var sorgente = box.querySelector(".g-dati"), tipo = box.getAttribute("data-tipo");
+    try {
+      var dati = JSON.parse(sorgente ? sorgente.textContent : "{}");
+      if (!DISEGNA[tipo]) throw new Error("tipo sconosciuto: " + tipo);
+      DISEGNA[tipo](box, dati);
+    } catch (e) {
+      box.innerHTML = '<p class="g-nota">Grafico non disponibile (' + esc(e.message) + ").</p>";
+    }
+  });
+})();
+</script></body></html>

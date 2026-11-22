@@ -130,7 +130,7 @@ function lookup(i,now){
    if(!id){const r=await fetch('https://api.coingecko.com/api/v3/search?query='+encodeURIComponent(q)); const j=await r.json(); const c=(j.coins||[])[0]; if(!c){h.className='hint bad';h.textContent='coin not found';return} id=c.id; a.id=id;}
    if(!(id in priceCache)){const r=await fetch('https://api.coingecko.com/api/v3/simple/price?vs_currencies=usd&ids='+encodeURIComponent(id)); const j=await r.json(); priceCache[id]=j[id]?j[id].usd:null;}
    const p=priceCache[id]; h.className='hint ok'; h.textContent=`CoinGecko id: ${id}`+(p!=null?` · now ${p.toLocaleString('en-US',{maximumFractionDigits:6})} USD`:'');
-   if(a.price===''&&p!=null){a.price=String(Number((a.cond==='above'?p*1.05:p*0.95).toPrecision(3)));render();}
+   if(a.price===''&&p!=null){a.price=String(Number((a.cond==='above'?p*1.05:p*0.95).toPrecision(3)));const pi=rowsEl.children[i]&&rowsEl.children[i].querySelector('[data-k=price]');if(pi)pi.value=a.price;}
    build();
   }catch(e){h.className='hint';h.textContent='live lookup unavailable (rate limit); the id will be used as typed';a.id=a.id||q;build()}
  }, now?0:500);

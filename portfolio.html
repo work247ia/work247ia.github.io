@@ -58,11 +58,11 @@ ol.steps{padding-left:22px}ol.steps li{margin-bottom:14px}
 <h2>Open-source bug fixes</h2>
 
 <div class="item">
-<span class="tag">Python</span><span class="tag">Django</span><span class="tag">open · awaiting review</span>
+<span class="tag">Python</span><span class="tag">Django</span><span class="tag">merged</span>
 <h3>orm-lens: NullBooleanField wrongly flagged as a NOT NULL migration risk</h3>
-<p>The migration-risk checker reported <code>AddField(models.NullBooleanField())</code> as a critical NOT NULL column, although that field type is nullable by definition. I added two small helpers so both affected rules decide nullability correctly, 4 regression tests (3 of them fail on the old code), and a CHANGELOG entry. Full suite: 1,320 tests passing; ruff and mypy clean.</p>
+<p>The migration-risk checker reported <code>AddField(models.NullBooleanField())</code> as a critical NOT NULL column, although that field type is nullable by definition. I added two small helpers so both affected rules decide nullability correctly, plus regression tests and a CHANGELOG entry. Four rounds of automated review (CodeRabbit) followed, which also tightened how <code>db_default</code> is handled; each fix came with a test that fails on the previous code. Full suite: 1,327 tests passing; ruff and mypy clean. Merged by the maintainer on 23 Nov 2026.</p>
 <p class="links"><a href="https://github.com/FROWNINGdev/orm-lens/pull/342">Pull request #342</a><a href="https://github.com/FROWNINGdev/orm-lens/issues/338">Issue #338</a></p>
-<p class="meta">22 NOV 2026</p>
+<p class="meta">22 NOV 2026 · MERGED 23 NOV 2026</p>
 </div>
 
 <div class="item">
